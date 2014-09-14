@@ -1,9 +1,9 @@
 <p:declare-step type="ccproc:directory-list" xmlns:p="http://www.w3.org/ns/xproc" version="1.0"
 	xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:cx="http://xmlcalabash.com/ns/extensions"
-	xmlns:cfn="http:/www.corbas.co.uk/ns/xslt/functions"
 	xmlns:pkg="http://expath.org/ns/pkg"
 	pkg:import-uri="http://www.corbas/co.uk/xproc-tools/directory-list"
 	
+	xmlns:cfn="http:/www.corbas.co.uk/ns/xslt/functions"
 	xmlns:ccproc="http://www.corbas.co.uk/ns/xproc/steps">
 
 	<p:documentation xmlns="http://www.w3.org/1999/xhtml">
@@ -26,8 +26,8 @@
 
 	<p:documentation xmlns="http://www.w3.org/1999/xhtml">
 		<p>Generate directory listings. The include and exclude filters are only applied to file
-			names and not to directories. The filters are implemented as regular expressions not
-			glob patterns. This seems more useful than the standard approach. We've implemented this
+			names and not to directories. The filters are implemented as regular expressions matching any
+			part of the file name. This seems more useful than the standard approach. We've implemented this
 			by handling the pattern matches in xslt rather than in the <code>p:directory-list</code>
 			step. The patterns are not required to match the whole path name (unless desired)</p>
 	</p:documentation>
@@ -64,6 +64,7 @@
 			<p>Directory names are not filtered and are always processed.</p>
 		</p:documentation>
 	</p:option>
+
 	<p:option name="match-path" select="'false'">
 		<p:documentation xmlns="http://www.w3.org/1999/xhtml">
 			<p>The <code>match-path</code> option determines whether or not the
@@ -75,7 +76,14 @@
 		</p:documentation>
 	</p:option>
 
-
+	<p:option name="resolve" select="'false'">
+		<p:documentation  xmlns="http://www.w3.org/1999/xhtml">
+			<p>The <code>resolve</code> options sets whether or not the <code>uri</code>
+			attribute is created for a directory or file. If set to <strong>true</strong> then
+			an additional attribute — <code>uri</code> — is set. This attribute contains
+			the resolved uri for any file or directory</p>
+		</p:documentation>
+	</p:option>
 
 	<!-- get the listing fo the top directory -->
 	<p:directory-list name="listing">
@@ -99,16 +107,20 @@
 						<xd:desc>
 							<xd:p><xd:b>Created on:</xd:b> Jun 4, 2014</xd:p>
 							<xd:p><xd:b>Author:</xd:b> nicg</xd:p>
-							<xd:p/>
+							<xd:p><xd:b>Added resolve attribute - nicg - 14/09/2014</xd:b></xd:p>
 						</xd:desc>
 					</xd:doc>
 
 					<xsl:param name="include-filter" as="xs:string"/>
 					<xsl:param name="exclude-filter" as="xs:string"/>
 					<xsl:param name="match-path" as="xs:string"/>
+					<xsl:param name="resolve" as="xs:string"/>
 
 					<xsl:template match="c:directory|c:other|c:file[cfn:include-file(.)]|@*|text()">
 						<xsl:copy>
+							<xsl:if test="lower-case($resolve) = 'true' and parent::*">
+								<xsl:attribute name="uri" select="resolve-uri(@name, parent::*/@xml:base)"/>
+							</xsl:if>
 							<xsl:apply-templates select="@*|node()"/>
 						</xsl:copy>
 					</xsl:template>
@@ -146,6 +158,8 @@
 		<p:with-param name="exclude-filter"
 			select="if ($exclude-filter = '___[[dummy]]___') then '' else $exclude-filter"/>
 		<p:with-param name="match-path" select="$match-path"/>
+		<p:with-param name="resolve" select="if (lower-case($resolve) eq 'true') then 'true' else 'false'"/>
+		
 	</p:xslt>
 
 
