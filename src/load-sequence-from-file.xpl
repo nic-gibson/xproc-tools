@@ -4,7 +4,7 @@
 	xmlns:ccproc="http://www.corbas.co.uk/ns/xproc/steps"
 	xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:c="http://www.w3.org/ns/xproc-step"
 	xmlns:pkg="http://expath.org/ns/pkg"
-	pkg:import-uri="http://www.corbas/co.uk/xproc-tools/load-sequence-from-file"	version="1.0">
+	pkg:import-uri="http://www.corbas.co.uk/xproc-tools/load-sequence-from-file"	version="1.0">
 
 	<p:declare-step type="ccproc:load-sequence-from-file" name="load-sequence-from-file">
 

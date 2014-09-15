@@ -1,6 +1,6 @@
 <p:declare-step type="ccproc:recursive-directory-list" xmlns:p="http://www.w3.org/ns/xproc"
 	xmlns:pkg="http://expath.org/ns/pkg"
-	pkg:import-uri="http://www.corbas/co.uk/xproc-tools/recursive-directory-list"
+	pkg:import-uri="http://www.corbas.co.uk/xproc-tools/recursive-directory-list"
 	version="1.0" xmlns:c="http://www.w3.org/ns/xproc-step"
 	xmlns:cfn="http:/www.corbas.co.uk/ns/xslt/functions"
 	xmlns:pos="http://exproc.org/proposed/steps/os"

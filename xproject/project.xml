@@ -2,7 +2,7 @@
 <project xmlns="http://expath.org/ns/project"
 	name="http://www.corbas.co.uk/xproc-tools"
 	abbrev="xproc-tools"
-	version="0.2.1">
+	version="0.2.3">
 	
 	<title>XProc Tools</title>
 	

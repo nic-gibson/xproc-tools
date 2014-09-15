@@ -1,6 +1,6 @@
 <p:library version="1.0" xmlns:c="http://www.w3.org/ns/xproc-step"
 	xmlns:pkg="http://expath.org/ns/pkg"
-	pkg:import-uri="http://www.corbas/co.uk/xproc-tools/threaded-xslt"
+	pkg:import-uri="http://www.corbas.co.uk/xproc-tools/threaded-xslt"
 	xmlns:p="http://www.w3.org/ns/xproc" xmlns:ccproc="http://www.corbas.co.uk/ns/xproc/steps">
 
 	<p:documentation> This program and accompanying files are copyright 2008, 2009, 20011, 2012,
