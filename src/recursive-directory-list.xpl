@@ -84,9 +84,19 @@
 				never stop. At least one directory listing level will always be generated</p>
 		</p:documentation>
 	</p:option>
+	
+	<p:option name="resolve" select="'false'">
+		<p:documentation  xmlns="http://www.w3.org/1999/xhtml">
+			<p>The <code>resolve</code> options sets whether or not the <code>uri</code>
+				attribute is created for a directory or file. If set to <strong>true</strong> then
+				an additional attribute — <code>uri</code> — is set. This attribute contains
+				the resolved uri for any file or directory</p>
+		</p:documentation>
+	</p:option>
+	
 
 	<p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
-	<p:import href="directory-list.xpl"/>
+	<p:import href="http://www.corbas.co.uk/xproc-tools/directory-list"/>
 
 	<!-- find out the directory separator -->
 	<pos:info name="get-os-info"/>
@@ -97,6 +107,7 @@
 		<p:with-option name="include-filter" select="$include-filter"/>
 		<p:with-option name="exclude-filter" select="$exclude-filter"/>
 		<p:with-option name="match-path" select="$match-path"/>
+		<p:with-option name="resolve" select="$resolve"/>
 	</ccproc:directory-list>
 
 	<p:viewport match="/c:directory/c:directory" name="recurse-directory">
@@ -107,6 +118,7 @@
 		
 
 		<p:choose>
+			
 			<p:when test="$depth != 0">
 
 				<ccproc:recursive-directory-list>
@@ -115,7 +127,9 @@
 					<p:with-option name="exclude-filter" select="$exclude-filter"/>
 					<p:with-option name="match-path" select="$match-path"/>
 					<p:with-option name="depth" select="$depth - 1"/>
+					<p:with-option name="resolve" select="$resolve"/>
 				</ccproc:recursive-directory-list>
+				
 			</p:when>
 			
 			<p:otherwise>
