@@ -96,7 +96,7 @@
 	
 
 	<p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
-	<p:import href="http://www.corbas.co.uk/xproc-tools/directory-list"/>
+	<p:import href="directory-list.xpl"/>
 
 	<!-- find out the directory separator -->
 	<pos:info name="get-os-info"/>
