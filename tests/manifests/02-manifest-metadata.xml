@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../schemas/manifest.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<manifest xmlns="http://www.corbas.co.uk/ns/transforms/data" xml:base="../">
+  
+    <meta name="meta3" value="manifest"/>
+    
+    <group>
+      <meta name="meta1" value="group" />
+      <item href="data/test-01.xml"/>
+      <item href="data/test-02.xml">
+        <meta name="meta2" value="group-item"/>
+        <meta name="meta1" value="group-item"/>
+      </item>
+    </group>
+  
+    <processed-item stylesheet="xslt/preprocessor-01.xsl">
+      <item href="data/proc-01.xml"/>
+      <item href="data/proc-02.xml"/>
+    </processed-item>
+  
+    <item href="data/test-03.xml">
+      <meta name="meta1" value="item"/>
+    </item>
+  
+</manifest>
