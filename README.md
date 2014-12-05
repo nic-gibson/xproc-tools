@@ -1,26 +1,9 @@
 # XProc Tools #
 
-## Contents ##
-
-[Introduction][]
-
-[Namespace][]
-
-[temp-dir.xpl][]
-
-[directory-list.xpl][]
-
-[recursive-directory-list.xpl][]
-
-[load-sequence-from-file.xpl][]
-
-[threaded-xslt.xpl][]
-
 ## Introduction ##
 This is a small set of useful XProc tools that have developed over time to provide a framework for transformation of content from one XML format to another. These are primarily used when transformation makes most sense as a sequence of transformations. 
 
-All of these can be used via the ExPath package file or directly from the `src` directory.  The import URIs for each step (when using ExPath) are given below:
-
+All of these can be used via the ExPath package file or directly from the _src_ directory.  The import URIs for each step (when using ExPath) are given below.
 
 
 ## Namespace ##
@@ -222,7 +205,7 @@ In its simplest form a manifest consists of sequence of `item` elements referenc
 </manifest>
 ```
 
-The result of processing this manifest would be a sequence of two XML documents containing the content of `doc1.xml` followed by the content of `doc2.xml`.
+The result of processing this manifest would be a sequence of two XML documents containing the content of _doc1.xml_ followed by the content of  _doc2.xml_.
 
 Components in the manifest may be grouped and may be given an `xml:id` attribute:
 
@@ -276,7 +259,7 @@ One of the more sophisticated features of the loader script is that it can proce
 </manifest>
 ```
 
-The result of loading this manifest would be a sequence of two documents, `data-01.xml` and the output of processing `data-02.xml` with `mapper.xsl`.  Only the XSLT's primary output is used, any secondaries (via `xsl:result-document`) will be discarded.
+The result of loading this manifest would be a sequence of two documents, _data-01.xml_ and the output of processing _data-02.xml_ with _mapper.xsl_.  Only the XSLT's primary output is used, any secondaries (via `xsl:result-document`) will be discarded.
 
 ##### Metadata #####
 
@@ -312,7 +295,7 @@ Metadata is assigned to items via the document hierarchy and not the document or
 
 When the documents referenced by the `item` attributes are loaded, the  metadata is converted into namespaced attributes on the root element.  The attributes are in the namespace `http://www.corbas.co.uk/ns/transforms/data` with the prefix set to `data`. The attributes name is  constructed from the value of the `name` attribute  of the `metadata` element and the `data` prefix. 
 
-If `doc1.xml` above were to be as follows:
+If _doc1.xml_ above were to be as follows —
 
 ```xml
 <document xmlns="http://example.com" xml:id="abc">
@@ -320,7 +303,7 @@ If `doc1.xml` above were to be as follows:
 </document>
 ```
 
-then the result of loading it would be:
+then the result of loading it would be —
 
 ```xml
 <document xmlns="http://example.com" xml:id="abc"
@@ -344,7 +327,7 @@ Multiple `item` elements may be wrapped with a single `processed-item` element.
 
 #### Integration with other modules ####
 
-This module was specifically written with the [threaded-xslt.xpl][] module in mind. When used with that module, the `item` elements will reference stylesheets. The [threaded-xslt.xpl][]  module is aware of the metadata attributes discussed above and they are converted to XSLT parameters and passed to the stylesheets when they evaluated.
+This module was specifically written with the _ccproc:threaded-xslt_ step in mind. When used with that module, the `item` elements will reference stylesheets. The _ccproc:threaded-xslt_ step  module is aware of the metadata attributes discussed above and they are converted to XSLT parameters and passed to the stylesheets when they evaluated.
 
 ## threaded-xslt.xpl ##
 
@@ -368,4 +351,43 @@ This module provides a solution to the problem of taking an input document and f
 The step takes two input ports. The primary input (`source`) holds the document to be transformed. The other input port (`stylesheets`) holds the sequence of stylesheets to be applied to the source document. 
 
 The step applies the first stylesheet to the input document, the second stylesheet to the output of the first and so on.
+
+The final output is presented on the `result` port. However, all intermediate output is available on the `imtermediates` port.
+
+```xml
+<p:import href="http://www.corbas.co.uk/xproc-tools/threaded-xslt"/>
+<ccproc:threaded-xslt>
+  <p:input port="source">
+    <p:inline><test-doc>test content</test-doc></p:inline>
+  </p:input>
+  <p:input port="stylesheets">
+    <p:document href="transform-01.xsl"/>
+    <p:document href="transform-02.xsl"/>
+  </p:input>
+</ccproc:threaded-xslt>
+```
+
+The output on the `result` port would be the result of transforming the document on the input port with _transform-01.xsl_ and then transforming the output of that transformation with _transform-01.xsl_. 
+
+The output on the `intermediates` port would be a sequence of two documents. The first would be the result of transforming the input document with _transform-01.xsl_ and then the result of transforming that document with _transform-02.xsl_. Obviously, the intermediates port has  more value if more documents are transformed. The intent of the intermediates port is to allow debug output to be created.
+
+#### Metadata and parameters ####
+
+This step can operate in conjunction with _ccproc:load-sequence-from-file_ to convert metadata stored in the manifest into XSLT parameter values. 
+
+_ccproc:load-sequence-from-file_ examines the XSLT documents looking for attributes on the root element in the `http://www.corbas.co.uk/ns/transforms/data` namespace and creates parameters by stripping the namespace from the attribute to get a name and using the value as the parameter value.
+
+Given a manifest —
+
+```xml
+<manifest xmlns="http://www.corbas.co.uk/ns/transforms/data">
+  <metadata name="input-root" value="/usr/local/share/xml/"/>
+  <item href="transform-01.xsl" enabled="false"/>  
+  <item href="transfor-02.xsl">
+    <metadata name="output-root" value="/var/www/docs/"/>
+  </item>
+</manifest>
+```
+
+_ccproc:threaded-xslt_ will create XSLT parameters and pass them to the stylesheet engine. When _transform-01.xsl_ is applied to a document, the parameter `input-root` will be set to the value "/usr/local/share/xml/" . When _transform-02.xsl_ is applied, `input-root` will also be set (to "/usr/local/share/xml/") and `output-root` will be set to "/var/www/docs/".
 
