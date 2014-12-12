@@ -4,18 +4,19 @@
         <filters directoryPatterns="" filePatterns="" positiveFilePatterns="" showHiddenFiles="false"/>
         <options>
             <serialized version="16.1" xml:space="preserve">
-                <map>
+                <serializableOrderedMap>
                     <entry>
                         <String>validation.scenarios</String>
                         <validationScenario-array/>
                     </entry>
-                </map>
+                </serializableOrderedMap>
             </serialized>
         </options>
     </meta>
     <projectTree name="xproc-tools.xpr">
         <folder path="schemas/"/>
         <folder path="src/"/>
+        <folder path="tests/"/>
         <folder path="xproject/"/>
     </projectTree>
 </project>

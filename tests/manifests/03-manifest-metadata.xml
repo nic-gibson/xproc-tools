@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-model href="../schemas/manifest.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
-<manifest xmlns="http://www.corbas.co.uk/ns/transforms/data" xml:base="../">
-  
-    <meta name="test-param" value="test-value-at-manifest"/>
-    <meta name="bar-param" value="bar-value"/>
-  
-    <group>
-      <meta name="test-param" value="test-value-at-group" />
-      <item href="xslt/test-01.xsl"/>
-      <item href="xslt/test-02.xsl">
-        <meta name="test-param" value="test-value-at-item"/>
-      </item>
+<?xml-model href="../../schemas/manifest.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<manifest xmlns="http://www.corbas.co.uk/ns/transforms/data" xml:base="../../../">
+
+  <meta name="test-param" value="test-value-at-manifest"/>
+  <meta name="bar-param" value="bar-value"/>
+
+  <group xml:base="xproc-tools/">
+    <meta name="test-param" value="test-value-at-group"/>
+    <group xml:base="tests/xslt/">
+      <item href="test-01.xsl"/>
     </group>
-  
-	<item href="xslt/test-03.xsl">
-      <meta name="foo-param" value="foo-value"/>
+    <item href="tests/xslt/test-02.xsl">
+      <meta name="test-param" value="test-value-at-item"/>
     </item>
-  
+  </group>
+
+  <item href="xproc-tools/tests/xslt/test-03.xsl">
+    <meta name="foo-param" value="foo-value"/>
+  </item>
+
 </manifest>
