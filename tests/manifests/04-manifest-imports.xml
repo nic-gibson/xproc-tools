@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../schemas/manifest.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<manifest xmlns="http://www.corbas.co.uk/ns/transforms/data" xml:base="../" description="Testing manifest imports">
+  
+
+  
+    <import xml:base="manifests/" href="02-manifest-metadata.xml"/>
+ 
+    <group xml:base="../../">
+      <import xml:base="xproc-tools/tests/" href="manifests/03-manifest-metadata.xml"/>
+    </group>
+ 
+</manifest>

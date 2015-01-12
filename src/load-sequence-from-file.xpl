@@ -390,7 +390,8 @@
 						</xsl:template>
 						
 						<xsl:template match="import[not(exists(@enabled)) or xs:boolean(@enabled) = true()]">
-							<xsl:apply-templates select="doc(@href)/manifest|doc(@href)/group"/>
+							<xsl:variable name="resolved"  select="resolve-uri(@href, base-uri(.))"/>
+							<xsl:apply-templates select="doc($resolved)/manifest|doc($resolved)/group"/>
 						</xsl:template>
 						
 						<xsl:template match="import[exists(@enabled) and xs:boolean(@enabled) = false()]"/>
@@ -514,6 +515,10 @@
 							<xsl:copy>
 								<xsl:apply-templates select="@*|node()"/>
 							</xsl:copy>
+						</xsl:template>
+						
+						<xsl:template match="manifest/manifest">
+							<xsl:apply-templates/>
 						</xsl:template>
 						
 						<xsl:template match="group">
