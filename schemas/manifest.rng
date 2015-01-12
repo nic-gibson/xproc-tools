@@ -254,7 +254,7 @@
 		<a:documentation xmlns="http://www.w3.org/1999/xhtml">
 			<p>The description allows for a short piece of descriptive text to be applied to an item.</p>
 		</a:documentation>
-		<attribute name="descriptions">
+		<attribute name="description">
 			<text/>
 		</attribute>
 	</define>
