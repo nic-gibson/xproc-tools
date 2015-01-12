@@ -102,7 +102,7 @@
 				<p xmlns="http://www.w3.org/1999/xhtml">The output of the step is the transformed
 					document.</p>
 			</p:documentation>
-			<p:pipe port="result" step="run-threaded-xslt"/>
+			<p:pipe port="matched" step="get-last-document"/>
 		</p:output>
 		
 		<p:output port="intermediates" sequence="true">
@@ -110,7 +110,7 @@
 				<p xmlns="http://www.w3.org/1999/xhtml">The output of each step in the sequence.
 					document. Each result is wrapped in a c:result element </p>
 			</p:documentation>		
-			<p:pipe port="intermediates-out" step="run-threaded-xslt"/>
+			<p:pipe port="result" step="run-threaded-xslt"/>
 		</p:output>
 		
 		
@@ -173,27 +173,13 @@
 				</p:documentation>
 			</p:input>
 			
-			<p:input port="intermediates-in" sequence="true">
-				<p:documentation xmlns="http://www.w3.org/1999/xhtml"><p>Document results so far.</p></p:documentation>
-			</p:input>
-			
-			<p:output port="result" primary="true">
+		<p:output port="result" primary="true" sequence="true">
 				<p:documentation>
-					<p xmlns="http://www.w3.org/1999/xhtml">The output of the step is the transformed
-						document.</p>
+					<p xmlns="http://www.w3.org/1999/xhtml">The output is the results of each stage of the transformation
+						in sequence.</p>
 				</p:documentation>
 				<p:pipe port="result" step="determine-recursion"/>
 			</p:output>
-			
-			<p:output port="intermediates-out" sequence="true">
-				<p:documentation>
-					<p xmlns="http://www.w3.org/1999/xhtml">The output of each step in the sequence.
-						document.</p>
-					<p:pipe port="result" step="run-single-xslt"/>
-					<p:pipe port="intermediates" step="determine-recursion"/>
-				</p:documentation>			
-			</p:output>
-			
 			
 			<!-- Split of the first transformation from the sequence -->
 			<p:split-sequence name="split-stylesheets" initial-only="true" test="position()=1">
@@ -203,20 +189,11 @@
 			</p:split-sequence>
 			
 			<!-- How many of these are left? We actually only care to know  if there are *any* hence the limit. -->
-			<!--<p:count name="count-remaining-transformations" limit="1">-->
-				<p:count name="count-remaining-transformations">
+			<p:count name="count-remaining-transformations" limit="1">			
 				<p:input port="source">
 					<p:pipe port="not-matched" step="split-stylesheets"/>
 				</p:input>
 			</p:count>
-			
-			<cx:message>
-				<p:with-option name="message" select="concat('found ', /c:result, ' stylesheets')">
-					<p:pipe port="result" step="count-remaining-transformations"/>
-				</p:with-option>
-			</cx:message>
-			<p:sink/>
-			
 				
 				<!-- find any metadata attributes on the stylesheet (these may be
 				created by load-sequence-from-file) and convert them to a
@@ -266,14 +243,11 @@
 				<!-- If we have any transformations remaining recurse -->
 				<p:when test="number(c:result)>0">
 					
-					<p:output port="result">
+					<p:output port="result" sequence="true">
+						<p:pipe port="result" step="run-single-xslt"/>
 						<p:pipe port="result" step="continue-recursion"/>
 					</p:output>
 					
-					<p:output port="intermediates" sequence="true">
-						<p:pipe port="intermediates-out" step="continue-recursion"/>
-					</p:output>		
-										
 					<ccproc:threaded-xslt-impl name="continue-recursion">
 						
 						<p:input port="stylesheets">
@@ -283,12 +257,7 @@
 						<p:input port="source">
 							<p:pipe port="result" step="run-single-xslt"/>
 						</p:input>
-						
-						<p:input port="intermediates-in">
-							<p:pipe port="intermediates-in" step="threaded-xslt-impl"/>
-							<p:pipe port="result" step="run-single-xslt"/>
-						</p:input>
-						
+												
 					</ccproc:threaded-xslt-impl>
 					
 				</p:when>
@@ -296,15 +265,10 @@
 				<!-- Otherwise, pass the output of our transformation back as the result -->
 				<p:otherwise>
 					
-					<p:output port="result">
+					<p:output port="result" sequence="true">
 						<p:pipe port="result" step="terminate-recursion"/>
 					</p:output>
 					
-					<p:output port="intermediates" sequence="true">
-						<p:pipe port="intermediates-in" step="threaded-xslt-impl"/>
-						<p:pipe port="result" step="run-single-xslt"/>
-					</p:output>
-
 					<p:identity name="terminate-recursion">
 						<p:input port="source">
 							<p:pipe port="result" step="run-single-xslt"/>
@@ -332,14 +296,14 @@
 			<p:input port="parameters">
 				<p:pipe port="parameters" step="threaded-xslt"/>
 			</p:input>			
-			
-			<p:input port="intermediates-in">
-				<p:empty/>
-			</p:input>
-			
+				
 		</ccproc:threaded-xslt-impl>
 		
-
+		<p:split-sequence name="get-last-document" test="position() = last()">
+			<p:input port="source">
+				<p:pipe port="result" step="run-threaded-xslt"/>
+			</p:input>
+		</p:split-sequence>
 		
 		
 		
