@@ -1,6 +1,7 @@
 	<p:declare-step name="threaded-xslt" type="ccproc:threaded-xslt" exclude-inline-prefixes="#all"
 		pkg:import-uri="http://www.corbas.co.uk/xproc-tools/threaded-xslt"  xmlns:c="http://www.w3.org/ns/xproc-step"
 		xmlns:pkg="http://expath.org/ns/pkg"  version="1.0" xmlns:data="http://www.corbas.co.uk/ns/transforms/data"
+		xmlns:cx="http://xmlcalabash.com/ns/extensions"
 		xmlns:p="http://www.w3.org/ns/xproc" xmlns:ccproc="http://www.corbas.co.uk/ns/xproc/steps">
 		
 		<p:documentation> This program and accompanying files are copyright 2008, 2009, 20011, 2012,
@@ -112,6 +113,9 @@
 			<p:pipe port="intermediates-out" step="run-threaded-xslt"/>
 		</p:output>
 		
+		
+		<p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
+		
 		<p:declare-step name="convert-meta" type="ccproc:convert-meta-to-param">
 			<p:documentation  xmlns="http:/wwww.w3.org/1999/xhtml">
 				<p>This step converts attributes in the http://www.corbas.co.uk/ns/transforms/data namesapce
@@ -178,13 +182,15 @@
 					<p xmlns="http://www.w3.org/1999/xhtml">The output of the step is the transformed
 						document.</p>
 				</p:documentation>
+				<p:pipe port="result" step="determine-recursion"/>
 			</p:output>
 			
 			<p:output port="intermediates-out" sequence="true">
 				<p:documentation>
 					<p xmlns="http://www.w3.org/1999/xhtml">The output of each step in the sequence.
 						document.</p>
-					<p:pipe port="result" step="build-intermediates"/>
+					<p:pipe port="result" step="run-single-xslt"/>
+					<p:pipe port="intermediates" step="determine-recursion"/>
 				</p:documentation>			
 			</p:output>
 			
@@ -197,16 +203,22 @@
 			</p:split-sequence>
 			
 			<!-- How many of these are left? We actually only care to know  if there are *any* hence the limit. -->
-			<p:count name="count-remaining-transformations" limit="1">
+			<!--<p:count name="count-remaining-transformations" limit="1">-->
+				<p:count name="count-remaining-transformations">
 				<p:input port="source">
 					<p:pipe port="not-matched" step="split-stylesheets"/>
 				</p:input>
 			</p:count>
 			
-			<!-- Ignore the result for now -->
+			<cx:message>
+				<p:with-option name="message" select="concat('found ', /c:result, ' stylesheets')">
+					<p:pipe port="result" step="count-remaining-transformations"/>
+				</p:with-option>
+			</cx:message>
 			<p:sink/>
-		
-			<!-- find any metadata attributes on the stylesheet (these may be
+			
+				
+				<!-- find any metadata attributes on the stylesheet (these may be
 				created by load-sequence-from-file) and convert them to a
 				param-set to pass to Saxon -->
 			<ccproc:convert-meta-to-param name="additional-params">
@@ -215,6 +227,13 @@
 				</p:input>
 			</ccproc:convert-meta-to-param>
 			
+			<!-- what are we running (LN debug) -->
+			<cx:message>
+				<p:with-option name="message" select="concat('Running - ', /xsl:stylesheet/@data:description)">
+					<p:pipe port="matched" step="split-stylesheets"/>
+				</p:with-option>
+			</cx:message>
+			<p:sink/>
 			
 			<!-- run the stylesheet, merging parameters - params from the
 				XProc run override those in the manifest -->
@@ -230,14 +249,7 @@
 					<p:pipe port="parameters" step="threaded-xslt-impl"/>
 				</p:input>
 			</p:xslt>
-			
-			<!-- copy the result to the intermediate outputs -->
-			<p:identity name="build-intermediates">
-				<p:input port="source">
-					<p:pipe port="intermediates-in" step="threaded-xslt-impl"/>
-					<p:pipe port="result" step="run-single-xslt"/>
-				</p:input>
-			</p:identity>
+				
 			
 			<!-- If there are any remaining stylesheets recurse. The primary
     	input is the result of our XSLT and the remaining
@@ -254,6 +266,14 @@
 				<!-- If we have any transformations remaining recurse -->
 				<p:when test="number(c:result)>0">
 					
+					<p:output port="result">
+						<p:pipe port="result" step="continue-recursion"/>
+					</p:output>
+					
+					<p:output port="intermediates" sequence="true">
+						<p:pipe port="intermediates-out" step="continue-recursion"/>
+					</p:output>		
+										
 					<ccproc:threaded-xslt-impl name="continue-recursion">
 						
 						<p:input port="stylesheets">
@@ -265,7 +285,8 @@
 						</p:input>
 						
 						<p:input port="intermediates-in">
-							<p:pipe port="result" step="build-intermediates"/>
+							<p:pipe port="intermediates-in" step="threaded-xslt-impl"/>
+							<p:pipe port="result" step="run-single-xslt"/>
 						</p:input>
 						
 					</ccproc:threaded-xslt-impl>
@@ -275,6 +296,15 @@
 				<!-- Otherwise, pass the output of our transformation back as the result -->
 				<p:otherwise>
 					
+					<p:output port="result">
+						<p:pipe port="result" step="terminate-recursion"/>
+					</p:output>
+					
+					<p:output port="intermediates" sequence="true">
+						<p:pipe port="intermediates-in" step="threaded-xslt-impl"/>
+						<p:pipe port="result" step="run-single-xslt"/>
+					</p:output>
+
 					<p:identity name="terminate-recursion">
 						<p:input port="source">
 							<p:pipe port="result" step="run-single-xslt"/>
@@ -308,6 +338,9 @@
 			</p:input>
 			
 		</ccproc:threaded-xslt-impl>
+		
+
+		
 		
 		
 	</p:declare-step>
