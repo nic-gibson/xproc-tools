@@ -225,7 +225,7 @@
 					</p:split-sequence>
 					
 					<!-- add the attribute -->
-					<p:add-attribute attribute-namespace="http://www.corbas.co.uk/ns/transforms/data" attribute-prefix="data"
+					<p:add-attribute attribute-namespace="http://www.corbas.co.uk/ns/transforms/meta" attribute-prefix="meta"
 						name="insert-meta-item" match="/*">
 						<p:with-option name="attribute-name" select="/data:meta/@name">
 							<p:pipe port="matched" step="split-metadata"/>
@@ -341,6 +341,7 @@
 					<p:pipe port="current" step="load-iterator"/>
 				</p:input>
 			</ccproc:process-metadata>
+			
 
 		</p:for-each>
 
@@ -379,25 +380,7 @@
 			</p:input>
 			
 			<p:input port="stylesheet">
-				<p:inline>
-					<xsl:stylesheet version="2.0"
-						xpath-default-namespace="http://www.corbas.co.uk/ns/transforms/data">
-						
-						<xsl:template match="@*|node()">
-							<xsl:copy>
-								<xsl:apply-templates select="@*|node()"/>
-							</xsl:copy>
-						</xsl:template>
-						
-						<xsl:template match="import[not(exists(@enabled)) or xs:boolean(@enabled) = true()]">
-							<xsl:variable name="resolved"  select="resolve-uri(@href, base-uri(.))"/>
-							<xsl:apply-templates select="doc($resolved)/manifest|doc($resolved)/group"/>
-						</xsl:template>
-						
-						<xsl:template match="import[exists(@enabled) and xs:boolean(@enabled) = false()]"/>
-						
-					</xsl:stylesheet>
-				</p:inline>
+				<p:document href="xslt/process-imports.xsl"/>
 			</p:input>
 			
 		</p:xslt>
@@ -414,20 +397,7 @@
 			</p:input>
 			
 			<p:input port="stylesheet">
-				<p:inline>
-					<xsl:stylesheet version="2.0"
-						xpath-default-namespace="http://www.corbas.co.uk/ns/transforms/data">
-						
-						<xsl:template match="@*|node()">
-							<xsl:copy>
-								<xsl:apply-templates select="@*|node()"/>
-							</xsl:copy>
-						</xsl:template>
-						
-						<xsl:template match="*[exists(@enabled) and xs:boolean(@enabled) = false()]"/>
-						
-					</xsl:stylesheet>
-				</p:inline>
+				<p:document href="xslt/remove-disabled.xsl"/>
 			</p:input>
 			
 		</p:xslt>
@@ -447,47 +417,8 @@
 			the 'nearest' (lowest in the document tree) metadata element with
 			a given name is assigned to the item -->
 			<p:input port="stylesheet">
-				<p:inline>
-					<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-						xpath-default-namespace="http://www.corbas.co.uk/ns/transforms/data"
-						version="2.0">
-						
-						<xsl:strip-space elements="*"/>
-						<xsl:output indent="yes"/>
-						
-						<xsl:template match="@*|node()">
-							<xsl:copy>
-								<xsl:apply-templates select="@*|node()"/>
-							</xsl:copy>
-						</xsl:template>
-						
-						<xsl:template match="item[ancestor::*/meta]">
-							<xsl:copy>
-								<xsl:apply-templates select="@* | * except meta"/>
-								<xsl:apply-templates select="." mode="copy-meta">
-									<xsl:with-param name="seen" select="()"/>
-								</xsl:apply-templates>
-							</xsl:copy>
-						</xsl:template>
-						
-						<xsl:template match="meta"/>
-						
-						<xsl:template match="*" mode="copy-meta">
-							<xsl:param name="seen" as="item()*"/>
-							<xsl:copy-of select="meta[not(@name = $seen)]"/>
-							<xsl:apply-templates select="parent::*" mode="copy-meta">
-								<xsl:with-param name="seen" select="($seen, meta/@name)"/>
-							</xsl:apply-templates>
-							
-						</xsl:template>
-						
-						
-						
-					</xsl:stylesheet>
-				</p:inline>
+				<p:document href="xslt/normalise-metadata.xsl"/>
 			</p:input>
-			
-			
 			
 		</p:xslt>
 		
@@ -502,53 +433,9 @@
 			</p:input>
 			
 			<p:input port="stylesheet">
-				<p:inline>
-					<xsl:stylesheet 
-						xmlns="http://www.corbas.co.uk/ns/transforms/data"
-						xpath-default-namespace="http://www.corbas.co.uk/ns/transforms/data"
-						version="2.0">
-						
-						<xsl:strip-space elements="*"/>
-						<xsl:output indent="yes"/>
-						
-						<xsl:template match="@*|node()">
-							<xsl:copy>
-								<xsl:apply-templates select="@*|node()"/>
-							</xsl:copy>
-						</xsl:template>
-						
-						<xsl:template match="manifest/manifest">
-							<xsl:apply-templates/>
-						</xsl:template>
-						
-						<xsl:template match="group">
-							<xsl:apply-templates/>
-						</xsl:template>
-						
-						<xsl:template match="processed-item">							
-							<xsl:apply-templates/>
-						</xsl:template>
-												
-						<xsl:template match="@href|@stylesheet">
-							<xsl:attribute name="{name()}" select="resolve-uri(., base-uri(.))"/>
-						</xsl:template>
-						
-						<xsl:template match="@xml:base"/>
-								
-						<!-- duplicate processed-item elements for each item contained -->
-						<xsl:template match="processed-item/item">
-							<processed-item>
-								<xsl:apply-templates select="../@*"/>
-								<xsl:copy>
-									<xsl:apply-templates select="@*|node()"/>
-								</xsl:copy>
-							</processed-item>
-						</xsl:template>
-						
-					</xsl:stylesheet>
-					
-				</p:inline>		
+				<p:document href="xslt/flatten-manifest.xsl"/>		
 			</p:input>
+			
 		</p:xslt>		
 		
 		

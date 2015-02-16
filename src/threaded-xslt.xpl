@@ -1,6 +1,7 @@
 	<p:declare-step name="threaded-xslt" type="ccproc:threaded-xslt" exclude-inline-prefixes="#all"
 		pkg:import-uri="http://www.corbas.co.uk/xproc-tools/threaded-xslt"  xmlns:c="http://www.w3.org/ns/xproc-step"
 		xmlns:pkg="http://expath.org/ns/pkg"  version="1.0" xmlns:data="http://www.corbas.co.uk/ns/transforms/data"
+		xmlns:meta="http://www.corbas.co.uk/ns/transforms/meta"
 		xmlns:cx="http://xmlcalabash.com/ns/extensions"
 		xmlns:p="http://www.w3.org/ns/xproc" xmlns:ccproc="http://www.corbas.co.uk/ns/xproc/steps">
 		
@@ -118,7 +119,7 @@
 		
 		<p:declare-step name="convert-meta" type="ccproc:convert-meta-to-param">
 			<p:documentation  xmlns="http:/wwww.w3.org/1999/xhtml">
-				<p>This step converts attributes in the http://www.corbas.co.uk/ns/transforms/data namesapce
+				<p>This step converts attributes in the http://www.corbas.co.uk/ns/transforms/meta namesapce
 				to parameters to be applied to the stylesheet. The attributes are not removed from the 
 				stylesheet. The result of this a step is a <code>c:param-set</code> element.</p>
 			</p:documentation>
@@ -138,7 +139,7 @@
 					<p:pipe port="stylesheet" step="convert-meta"/>
 				</p:input>
 				<p:input port="stylesheet">
-					<p:document href="build-params.xsl"/>
+					<p:document href="xslt/build-params.xsl"/>
 				</p:input>
 				<p:input port="parameters">
 					<p:empty/>
@@ -206,7 +207,7 @@
 			
 			<!-- what are we running (LN debug) -->
 			<cx:message>
-				<p:with-option name="message" select="concat('Running - ', /xsl:stylesheet/@data:description)">
+				<p:with-option name="message" select="concat('Running - ', (/xsl:stylesheet/@meta:description, /xsl:stylesheet/@meta:name, document-uri(/))[1])">
 					<p:pipe port="matched" step="split-stylesheets"/>
 				</p:with-option>
 			</cx:message>
