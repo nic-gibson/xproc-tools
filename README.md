@@ -259,7 +259,7 @@ One of the more sophisticated features of the loader script is that it can proce
 </manifest>
 ```
 
-The result of loading this manifest would be a sequence of two documents, _data-01.xml_ and the output of processing _data-02.xml_ with _mapper.xsl_.  Only the XSLT's primary output is used, any secondaries (via `xsl:result-document`) will be discarded.
+The result of loading this manifest would be a sequence of two documents,  the output of processing _data-01.xml_ with _mapper.xsl_ and _data-02.xml_.  Only the XSLT's primary output is used, any secondaries (via `xsl:result-document`) will be discarded.
 
 ##### Metadata #####
 
