@@ -24,44 +24,6 @@
 		<p>Manifest documents represent lists of files to be used by a process within the XSLT pipeline.
 			For an example of this usage, look at <code>load-sequence-from-file.xpl</code> where a
 			manifest is used to load a sequence of XML files as an XProc step.</p>
-		<table>
-			<caption>Change Log</caption>
-			<thead>
-				<tr>
-					<th>Date</th>
-					<th>Author</th>
-					<th>Change</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>25/02/2013</td>
-					<td>NG</td>
-					<td>Version 1.1</td>
-					<td>
-						<ul>
-							<li>Removed sequence attribute - will never be used.</li>
-						</ul>
-					</td>
-				</tr>
-				<tr>
-					<td>01/12/2014</td>
-					<td>NG</td>
-					<td>Version 1.2</td>
-					<td>
-						<ul>
-							<li>Added enabled attribute</li>
-							<li>Added group element</li>
-							<li>Added description element</li>
-							<li>Added metadata element</li>
-							<li>Added version attribute</li>
-							<li>Added group-content, common-attributes and content-attributes structures.</li>
-							<li>Updated all documentation to XHTML.</li>
-						</ul>
-					</td>
-				</tr>
-			</tbody>
-		</table>
 	</a:documentation>
 
 	<start>
@@ -168,7 +130,7 @@
 
 	<define name="metadata">
 		<a:documentation>
-			<p xmlns="http:/www.w3.org/1999/xhtml">meta elements are used to associate key-value pairs
+			<p xmlns="http://www.w3.org/1999/xhtml">meta elements are used to associate key-value pairs
 				with documents. They are inserted into the document by the loader as namespaced
 				(http://www.corbas.co.uk/ns/transforms/data) attributes on the <em>root element</em>
 				with the name and value performing as would be expected.</p>

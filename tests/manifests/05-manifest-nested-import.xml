@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../schemas/manifest.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<manifest xmlns="http://www.corbas.co.uk/ns/transforms/data">
+
+  <item href="../xslt/test-01.xsl"/>
+  <group xml:base="../xslt/">
+    <item href="test-02.xsl"/>
+    <item href="test-03.xsl"/>
+  </group>
+  
+  <group xml:base="../">
+    <import href="manifests/06-manifest-imported.xml"/>
+  </group>
+
+</manifest>

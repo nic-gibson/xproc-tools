@@ -115,6 +115,12 @@
 		</p:output>
 		
 		
+		<p:option name="verbose" select="'true'">
+			<p:documentation xmlns="http://www.w3.org/1999/xhtml">
+				<p>Set this to 'true' to get a listing of each stylesheet as it is applied.</p>
+			</p:documentation>
+		</p:option>
+		
 		<p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
 		
 		<p:declare-step name="convert-meta" type="ccproc:convert-meta-to-param">
@@ -132,7 +138,11 @@
 				<p:pipe port="result" step="build-parameters"/>
 			</p:output>
 			
-			<p:xslt name="build-parameters">
+			
+
+			
+			
+			<p:xslt name="build-parameters" version="2.0">
 				
 				<!-- WE ARE PROCESSING A STYLESHEET! -->
 				<p:input port="source">
@@ -146,6 +156,7 @@
 				</p:input>
 				
 			</p:xslt>
+				
 			
 		</p:declare-step>
 		
@@ -182,6 +193,12 @@
 				<p:pipe port="result" step="determine-recursion"/>
 			</p:output>
 			
+			<p:option name="verbose" select="'false'">
+				<p:documentation xmlns="http://www.w3.org/1999/xhtml">
+					<p>Set this to 'true' to get a listing of each stylesheet as it is applied.</p>
+				</p:documentation>
+			</p:option>
+			
 			<!-- Split of the first transformation from the sequence -->
 			<p:split-sequence name="split-stylesheets" initial-only="true" test="position()=1">
 				<p:input port="source">
@@ -195,6 +212,7 @@
 					<p:pipe port="not-matched" step="split-stylesheets"/>
 				</p:input>
 			</p:count>
+			
 				
 				<!-- find any metadata attributes on the stylesheet (these may be
 				created by load-sequence-from-file) and convert them to a
@@ -205,12 +223,29 @@
 				</p:input>
 			</ccproc:convert-meta-to-param>
 			
+
+
+
 			<!-- what are we running (LN debug) -->
-			<cx:message>
-				<p:with-option name="message" select="concat('Running - ', (/xsl:stylesheet/@meta:description, /xsl:stylesheet/@meta:name, document-uri(/))[1])">
-					<p:pipe port="matched" step="split-stylesheets"/>
-				</p:with-option>
-			</cx:message>
+			<p:choose name="check-verbose">
+				<p:when test="$verbose = 'true'">				
+					<cx:message>
+						
+						<p:with-option name="message" select="concat('Running - ', 
+							(/xsl:stylesheet/@meta:description, 
+							/xsl:stylesheet/@meta:name, 
+							tokenize(document-uri(/), '/')[last()])
+							[1])">
+							<p:pipe port="matched" step="split-stylesheets"/>
+						</p:with-option>
+					</cx:message>
+				</p:when>		
+				<p:otherwise>
+					<p:identity>
+
+					</p:identity>
+				</p:otherwise>
+			</p:choose>
 			<p:sink/>
 			
 			<!-- run the stylesheet, merging parameters - params from the
@@ -281,8 +316,7 @@
 			</p:choose>
 			
 		</p:declare-step>
-		
-		
+
 		<!-- run it all -->
 		<ccproc:threaded-xslt-impl name="run-threaded-xslt">
 			
@@ -296,7 +330,9 @@
 
 			<p:input port="parameters">
 				<p:pipe port="parameters" step="threaded-xslt"/>
-			</p:input>			
+			</p:input>		
+			
+			<p:with-option name="verbose" select="$verbose"/>
 				
 		</ccproc:threaded-xslt-impl>
 		
