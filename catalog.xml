@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE catalog PUBLIC "-//OASIS//DTD XML Catalogs V1.1//EN" "http://www.oasis-open.org/committees/entity/release/1.1/catalog.dtd">
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+  
+    <!-- Manifest schema file -->
+    <uri name="http://www.corbas.co.uk/xml/schemas/manifest.rng" uri="schemas/manifest.rng"/>
+    <uriSuffix uriSuffix="manifest.rng" uri="schemas/manifest.rng"/>    
+  
+    <!-- XProc modules -->
+    <uri name="http://www.corbas.co.uk/xproc-tools/load-sequence-from-file" uri="src/load-sequence-from-file.xpl"/>
+    <uriSuffix uriSuffix="load-sequence-from-file.xpl" uri="src/load-sequence-from-file.xpl"/>
+       
+    <uri name="http://www.corbas.co.uk/xproc-tools/directory-list" uri="src/directory-list.xpl"/>
+    <uriSuffix uriSuffix="directory-list.xpl" uri="src/directory-list.xpl"/>
+    
+    <uri name="http://www.corbas.co.uk/xproc-tools/recursive-directory-list" uri="src/recursive-directory-list.xpl"/>
+    <uriSuffix uriSuffix="recursive-directory-list.xpl" uri="src/directory-list.xpl"/>
+
+    <uri name="http://www.corbas.co.uk/xproc-tools/threaded-xslt" uri="src/threaded-xslt.xpl"/>
+    <uriSuffix uriSuffix="threaded-xslt.xpl" uri="src/threaded-xslt.xpl"/>
+    
+    <uri name="http://www.corbas.co.uk/xproc-tools/temp-dir" uri="src/temp-dir.xpl"/>
+    <uriSuffix uriSuffix="temp-dir.xpl" uri="src/temp-dir.xpl"/>
+    
+    
+</catalog>
