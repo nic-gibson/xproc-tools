@@ -184,6 +184,8 @@ As time and projects went by, it got a little more sophisticated.
 
 This step takes a single input – the manifest file and returns a sequence of XML documents loaded from the definitions in that file. The manifest is a file that validates against [manifest.rng](https://raw.githubusercontent.com/Corbas/xproc-tools/master/schemas/manifest.rng). 
 
+**The most recent version of the schema can always be accessed via [http://www.corbas.co.uk/xml/schemas/manifest.rng](http://www.corbas.co.uk/xml/schemas/manifest.rng)**
+
 #### Using the manifest file ####
 
 The manifest file allows the user to define a series of XML files to be loaded as a sequence. There are two ways to load files - directly or as the result of an XSLT stylesheet.  
