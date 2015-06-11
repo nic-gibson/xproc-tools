@@ -16,7 +16,7 @@
 	</p:output>
 	
 	<p:import href="../src/load-sequence-from-file.xpl"/>
-	
+
 	<ccproc:load-sequence-from-file name="loader">
 		<p:input port="source">
 			<p:pipe port="manifest" step="tester"/>
