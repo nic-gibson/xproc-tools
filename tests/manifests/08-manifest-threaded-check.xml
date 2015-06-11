@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="../../schemas/manifest.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<manifest xmlns="http://www.corbas.co.uk/ns/transforms/data" xml:base="../">
+    
+    <meta name="test-param" value="test-value-at-manifest"/>
+ <!--   <meta name="bar-param" value="bar-value"/>
+ -->   
+    
+    <item href="xslt/test-01.xsl"/>
+    
+    <item href="xslt/test-02.xsl">
+ <!--       <meta name="test-param" value="test-value-at-item"/>-->
+    </item>
+    
+    
+    
+</manifest>
