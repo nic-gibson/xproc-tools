@@ -74,6 +74,15 @@
 						</td>
 						
 					</tr>
+					
+					<tr>
+						<td>v1.3</td>
+						<td>2015-06-07</td>
+						<td>NG</td>
+						<td>
+							<ul>Correct xml:base errors in url resolution</ul>
+						</td>
+					</tr>
 				
 				</tbody> 
 			

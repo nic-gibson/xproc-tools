@@ -8,7 +8,7 @@
 	<p:serialization port="result" indent="true"/>
 	
 	<p:input port="manifest">
-		<p:document href="../../../../Dropbox/Workspaces/Content%20Development%20Tools/DEV/Transformations/TP/RTF2XML/Precedents/xproc/pipelines/migrate-word.efp.xml"/>
+		<p:document href="manifests/04-manifest-imports.xml"/>
 	</p:input>
 	
 	<p:output port="result">
