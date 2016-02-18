@@ -45,7 +45,7 @@
 			<p>The path option defines the path to be searched.</p>
 		</p:documentation>
 	</p:option>
-	<p:option name="include-filter" select="'___[[dummy]]___'">
+	<p:option name="include-filter" select="''">
 		<p:documentation xmlns="http://www.w3.org/1999/xhtml">
 			<p>The <code>include-filter</code> option allows an option <em>regular expression</em>
 				to be applied to either the file name or path name (depending on the value of
@@ -54,7 +54,7 @@
 			<p>Directory names are not filtered and are always processed.</p>
 		</p:documentation>
 	</p:option>
-	<p:option name="exclude-filter" select="'___[[dummy]]___'">
+	<p:option name="exclude-filter" select="''">
 		<p:documentation xmlns="http://www.w3.org/1999/xhtml">
 			<p>The <code>exclude-filter</code> option allows an option <em>regular expression</em>
 				to be applied to either the file name or path name (depending on the value of

@@ -4,6 +4,8 @@
   xmlns:c="http://www.w3.org/ns/xproc-step" version="1.0"
   name="directory-source" type="ccproc:directory-source">
   
+  <!-- THIS CODE IS NOT FULLY TESTED - YOU HAVE BEEN WARNED -->
+  
   <p:documentation xmlns="http://www.w3.org/1999/xhtml">
     <p>Use a directory as a source. We are wrapping an optionally recursive directory lister to 
       load all documents in the listing. Failure to parse can be either ignored or cause an exception, depending

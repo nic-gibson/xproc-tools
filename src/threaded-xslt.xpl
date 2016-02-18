@@ -1,6 +1,5 @@
 <p:declare-step name="threaded-xslt" type="ccproc:threaded-xslt" exclude-inline-prefixes="#all"
-	pkg:import-uri="http://www.corbas.co.uk/xproc-tools/threaded-xslt"
-	xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:pkg="http://expath.org/ns/pkg" version="1.0"
+	xmlns:c="http://www.w3.org/ns/xproc-step"
 	xmlns:data="http://www.corbas.co.uk/ns/transforms/data"
 	xmlns:meta="http://www.corbas.co.uk/ns/transforms/meta"
 	xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:p="http://www.w3.org/ns/xproc"

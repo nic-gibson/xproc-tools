@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <p:library xmlns:p="http://www.w3.org/ns/xproc"
-	xmlns:pkg="http://expath.org/ns/pkg"
-	pkg:import-uri="http://www.corbas.co.uk/xproc-tools/temp-dir"
 	xmlns:pos="http://exproc.org/proposed/steps/os"
 	xmlns:ccproc="http://www.corbas.co.uk/ns/xproc/steps"
 	xmlns:pxf="http://exproc.org/proposed/steps/file"

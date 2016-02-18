@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE catalog PUBLIC "-//OASIS//DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+    
+    <uri name="http://xml.corbas.co.uk/xproc/tools/directory-list.xpl" uri="./directory-list.xpl"/>
+    <uri name="http://xml.corbas.co.uk/xproc/tools/directory-source.xpl" uri="./directory-source.xpl"/>
+    <uri name="http://xml.corbas.co.uk/xproc/tools/load-sequence-from-file.xpl" uri="./load-sequence-from-file.xpl"/>
+    <uri name="http://xml.corbas.co.uk/xproc/tools/temp-dir.xpl" uri="./temp-dir.xpl"/>
+    <uri name="http://xml.corbas.co.uk/xproc/tools/theaded-xslt.xpl" uri="./threaded-xslt.xpl"/>
+    <uri name="http://xml.corbas.co.uk/xproc/tools/xslt/build-params.xsl" uri="./xslt/build-params.xsl"/>
+    <uri name="http://xml.corbas.co.uk/xproc/tools/xslt/flatten-manifest.xsl" uri="./xslt/flatten-manifest.xsl"/>
+    <uri name="http://xml.corbas.co.uk/xproc/tools/xslt/normalise-metadata.xsl" uri="./xslt/normalise-metadata.xsl"/>
+    <uri name="http://xml.corbas.co.uk/xproc/tools/xslt/remove-disabled.xsl" uri="./xslt/remove-disabled.xsl"/>
+    <uri name="http://xml.corbas.co.uk/xproc/tools/xslt/process-imports.xsl" uri="./xslt/process-imports.xsl"/>
+    
+</catalog>
