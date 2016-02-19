@@ -75,14 +75,28 @@
   </p:option>
   
   <p:import href="recursive-directory-list.xpl"/>
+  
+  <p:try name="try-directory-listing">
     
-  <ccproc:recursive-directory-list name="process-directory" resolve="true">
-    <p:with-option name="include-filter" select="$include-filter"/>
-    <p:with-option name="exclude-filter" select="$exclude-filter"/>
-    <p:with-option name="match-path" select="$match-path"/>
-    <p:with-option name="depth" select="$depth"/>
-    <p:with-option name="path" select="resolve-uri($path)"/>    
-  </ccproc:recursive-directory-list>      
+    <p:group>
+      
+      <ccproc:recursive-directory-list name="process-directory" resolve="true">
+        <p:with-option name="include-filter" select="$include-filter"/>
+        <p:with-option name="exclude-filter" select="$exclude-filter"/>
+        <p:with-option name="match-path" select="$match-path"/>
+        <p:with-option name="depth" select="$depth"/>
+        <p:with-option name="path" select="resolve-uri($path)"/>    
+      </ccproc:recursive-directory-list>      
+      
+    </p:group>
+    
+    <p:catch>
+      
+      
+    </p:catch>
+    
+  </p:try>
+    
   
   <p:for-each name="iterate-directory-results">
     
