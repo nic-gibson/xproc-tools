@@ -22,5 +22,4 @@
     <uri name="http://www.corbas.co.uk/xproc-tools/temp-dir" uri="src/temp-dir.xpl"/>
     <uriSuffix uriSuffix="temp-dir.xpl" uri="src/temp-dir.xpl"/>
     
-    
 </catalog>
