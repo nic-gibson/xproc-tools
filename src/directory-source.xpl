@@ -14,7 +14,7 @@
     <p:documentation xmlns="http://www.w3.org/1999/xhtml">
       <p>The sequence of documents loaded from the input directory tree</p>
     </p:documentation>
-    <p:pipe port="result" step="iterate-directory-results"/>
+    <p:pipe port="result" step="choose-load-docs"/>
   </p:output>
   
   <p:option name="path" required="true">
@@ -73,121 +73,201 @@
   </p:option>
   
   <p:import href="recursive-directory-list.xpl"/>
-    
-  <ccproc:recursive-directory-list name="process-directory" resolve="true">
-    <p:with-option name="include-filter" select="$include-filter"/>
-    <p:with-option name="exclude-filter" select="$exclude-filter"/>
-    <p:with-option name="match-path" select="$match-path"/>
-    <p:with-option name="depth" select="$depth"/>
-    <p:with-option name="path" select="resolve-uri($path)"/>    
-  </ccproc:recursive-directory-list>      
   
-  <p:for-each name="iterate-directory-results">
+  <p:try name="try-listing">
     
-    <p:output port="result">
-      <p:pipe port="result" step="did-it-load"/>
-    </p:output>
-    
-    <p:iteration-source select="//c:file">
-      <p:pipe port="result" step="process-directory"/>
-    </p:iteration-source>
-    
-    <p:try name="try-load">
+    <p:group>
       
-      <p:group>
-        
-        <p:output port="result" primary="true" sequence="true">
-          <p:pipe step="load-doc" port="result"/>
-        </p:output>
-        
-        <!-- dummy to indicate no error -->
-        <p:output port="report">
-          <p:empty/>
-        </p:output>        
-        
-        <p:load name="load-doc" dtd-validate="false">
-          <p:with-option name="href" select="/c:file/@uri"/>
-        </p:load>
-        
-      </p:group>
+      <p:output port="result">
+        <p:pipe port="result" step="process-directory"/>
+      </p:output>
       
-      <p:catch name="catch-load">
-        
-        <p:output port="result" primary="true" sequence="true">
-          <p:empty/>
-        </p:output>
-        
-        <!-- We have to do *something* in a catch, so let's copy the errors -->
-        <p:output port="report">
-          <p:pipe port="result" step="copy-errors"/>
-        </p:output>
-        
-        <p:identity name="copy-errors">
-          <p:input port="source">
-            <p:pipe port="error" step="catch-load"/>
-          </p:input>
-        </p:identity>
-        
-      </p:catch>
+      <p:output port="report">
+        <p:empty/>
+      </p:output>
       
-    </p:try>
+      <ccproc:recursive-directory-list name="process-directory" resolve="true">
+        <p:with-option name="include-filter" select="$include-filter"/>
+        <p:with-option name="exclude-filter" select="$exclude-filter"/>
+        <p:with-option name="match-path" select="$match-path"/>
+        <p:with-option name="depth" select="$depth"/>
+        <p:with-option name="path" select="resolve-uri($path)"/>    
+      </ccproc:recursive-directory-list>     
+      
+    </p:group>
     
-    <p:count name="count-errors">
-      <p:input port="source">
-        <p:pipe port="report" step="try-load"/>
-      </p:input>
-    </p:count>
+    <p:catch>
     
-    <p:choose name="did-it-load">
+      <p:output port="result">
+        <p:empty/>
+      </p:output>
       
-      <!-- error loading the document and we want -->
-      <p:when test="lower-case($fail-on-error) = 'true' and not(/c:result = 0)">
+      <p:output port="report">
+        <p:pipe port="result" step="listing-identity"/>
+      </p:output>
+      
+      <p:identity name="listing-identity">
+        <p:input port="source">
+          <p:inline><c:result/></p:inline>
+        </p:input>
+      </p:identity>
+      
+    </p:catch>    
+    
+  </p:try>
+  
+  <p:count name="count-dir-errors">
+    <p:input port="source">
+      <p:pipe port="report" step="try-listing"/>
+    </p:input>
+  </p:count>
+  
+  <p:choose name="choose-load-docs">
+    
+    <p:when test="lower-case($fail-on-error) = 'true' and not(/c:result = 0)">
+      
+      <p:xpath-context>
+        <p:pipe port="result" step="count-dir-errors"/>
+      </p:xpath-context>
+      
+      <p:output port="result" sequence="true">
+        <p:pipe port="result" step="re-process-directory"/>
+      </p:output>
+      
+      <!-- reraise the error -->
+      <ccproc:recursive-directory-list name="re-process-directory" resolve="true">
+        <p:with-option name="include-filter" select="$include-filter"/>
+        <p:with-option name="exclude-filter" select="$exclude-filter"/>
+        <p:with-option name="match-path" select="$match-path"/>
+        <p:with-option name="depth" select="$depth"/>
+        <p:with-option name="path" select="resolve-uri($path)"/>    
+      </ccproc:recursive-directory-list> 
+      
+    </p:when>
+    
+    <p:otherwise>
+      
+      <p:output port="result"  sequence="true">
+        <p:pipe port="result" step="iterate-directory-results"/>
+      </p:output>
+      
+      <p:for-each name="iterate-directory-results">
         
         <p:output port="result">
-          <p:empty/>
+          <p:pipe port="result" step="did-it-load"/>
         </p:output>
         
-        <!-- do it again and let the error go -->
-        <p:load name="load-doc" dtd-validate="false">
-          <p:with-option name="href" select="/c:file/@uri">
-            <p:pipe port="current" step="iterate-directory-results"/>
-          </p:with-option>
-        </p:load>
+        <p:iteration-source select="//c:file">
+          <p:pipe port="result" step="try-listing"/>
+        </p:iteration-source>
         
-        <p:sink/>
+        <p:try name="try-load">
+          
+          <p:group>
+            
+            <p:output port="result" primary="true" sequence="true">
+              <p:pipe step="load-doc" port="result"/>
+            </p:output>
+            
+            <!-- dummy to indicate no error -->
+            <p:output port="report">
+              <p:empty/>
+            </p:output>        
+            
+            <p:load name="load-doc" dtd-validate="false">
+              <p:with-option name="href" select="/c:file/@uri"/>
+            </p:load>
+            
+          </p:group>
+          
+          <p:catch name="catch-load">
+            
+            <p:output port="result" primary="true" sequence="true">
+              <p:empty/>
+            </p:output>
+            
+            <!-- We have to do *something* in a catch, so let's copy the errors -->
+            <p:output port="report">
+              <p:pipe port="result" step="copy-errors"/>
+            </p:output>
+            
+            <p:identity name="copy-errors">
+              <p:input port="source">
+                <p:pipe port="error" step="catch-load"/>
+              </p:input>
+            </p:identity>
+            
+          </p:catch>
+          
+        </p:try>
         
-      </p:when>
-      
-      <p:when test="not(/c:result = 0)">
-
-        <p:output port="result">
-          <p:pipe port="result" step="no-result"/>
-        </p:output>
-        
-        <p:identity name="no-result">
+        <p:count name="count-load-errors">
           <p:input port="source">
-            <p:empty/>
+            <p:pipe port="report" step="try-load"/>
           </p:input>
-        </p:identity>
+        </p:count>
         
-      </p:when>
+        <p:choose name="did-it-load">
+          
+          <!-- error loading the document and we want -->
+          <p:when test="lower-case($fail-on-error) = 'true' and not(/c:result = 0)">
+            
+            <p:xpath-context>
+              <p:pipe port="result" step="count-load-errors"/>
+            </p:xpath-context>
+            
+            <p:output port="result">
+              <p:empty/>
+            </p:output>
+            
+            <!-- do it again and let the error go -->
+            <p:load name="load-doc" dtd-validate="false">
+              <p:with-option name="href" select="/c:file/@uri">
+                <p:pipe port="current" step="iterate-directory-results"/>
+              </p:with-option>
+            </p:load>
+            
+            <p:sink/>
+            
+          </p:when>
+          
+          <p:when test="not(/c:result = 0)">
+            
+            <p:output port="result">
+              <p:pipe port="result" step="no-result"/>
+            </p:output>
+            
+            <p:identity name="no-result">
+              <p:input port="source">
+                <p:empty/>
+              </p:input>
+            </p:identity>
+            
+          </p:when>
+          
+          <p:otherwise>
+            
+            <p:output port="result">
+              <p:pipe port="result" step="good-result"/>
+            </p:output>
+            
+            <p:identity name="good-result">
+              <p:input port="source">
+                <p:pipe port="result" step="try-load"/>
+              </p:input>
+            </p:identity>
+            
+          </p:otherwise>
+          
+        </p:choose>
+        
+      </p:for-each>  
       
-      <p:otherwise>
-
-        <p:output port="result">
-          <p:pipe port="result" step="good-result"/>
-        </p:output>
-
-        <p:identity name="good-result">
-          <p:input port="source">
-            <p:pipe port="result" step="try-load"/>
-          </p:input>
-        </p:identity>
-
-      </p:otherwise>
-      
-    </p:choose>
+    </p:otherwise>
     
-  </p:for-each>
+  </p:choose>
+ 
+  
+
   
 </p:declare-step>

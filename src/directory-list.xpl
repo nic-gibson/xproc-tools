@@ -1,8 +1,5 @@
 <p:declare-step type="ccproc:directory-list" xmlns:p="http://www.w3.org/ns/xproc" version="1.0"
 	xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:cx="http://xmlcalabash.com/ns/extensions"
-	xmlns:pkg="http://expath.org/ns/pkg"
-	pkg:import-uri="http://www.corbas.co.uk/xproc-tools/directory-list"
-	
 	xmlns:cfn="http:/www.corbas.co.uk/ns/xslt/functions"
 	xmlns:ccproc="http://www.corbas.co.uk/ns/xproc/steps">
 
@@ -84,6 +81,15 @@
 			the resolved uri for any file or directory</p>
 		</p:documentation>
 	</p:option>
+  
+<!--
+  <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
+  
+  <cx:message>
+    <p:input port="source"><p:empty/></p:input>
+    <p:with-option name="message" select="concat('Generating listing for' , $path)"/>
+  </cx:message>  
+-->
 
 	<!-- get the listing fo the top directory -->
 	<p:directory-list name="listing">
