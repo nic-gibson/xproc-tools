@@ -6,7 +6,6 @@
   
     <!-- Manifest schema file -->
     <uri name="http://www.corbas.co.uk/xml/schemas/manifest.rng" uri="schemas/manifest.rng"/>
-    <uriSuffix uriSuffix="manifest.rng" uri="schemas/manifest.rng"/>    
   
     
 </catalog>
