@@ -5,8 +5,6 @@
 	xmlns:ccproc="http://www.corbas.co.uk/ns/xproc/steps"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:c="http://www.w3.org/ns/xproc-step"
-	xmlns:pkg="http://expath.org/ns/pkg"
-	pkg:import-uri="http://www.corbas.co.uk/xproc-tools/load-sequence-from-file"
 	version="1.0">	
 	
 	<p:declare-step type="ccproc:load-sequence-from-file" name="load-sequence-from-file">
@@ -389,7 +387,7 @@
 			</p:input>
 			
 			<p:input port="stylesheet">
-				<p:document href="xslt/process-imports.xsl"/>
+			  <p:document href="http://xml.corbas.co.uk/xml/xproc-tools/xslt/process-imports.xsl"/>
 			</p:input>
 			
 		</p:xslt>
@@ -406,7 +404,7 @@
 			</p:input>
 			
 			<p:input port="stylesheet">
-				<p:document href="xslt/remove-disabled.xsl"/>
+			  <p:document href="http://xml.corbas.co.uk/xml/xproc-tools/xslt/remove-disabled.xsl"/>
 			</p:input>
 			
 		</p:xslt>
@@ -426,7 +424,7 @@
 			the 'nearest' (lowest in the document tree) metadata element with
 			a given name is assigned to the item -->
 			<p:input port="stylesheet">
-				<p:document href="xslt/normalise-metadata.xsl"/>
+			  <p:document href="http://xml.corbas.co.uk/xml/xproc-tools/xslt/normalise-metadata.xsl"/>
 			</p:input>
 			
 		</p:xslt>
@@ -442,7 +440,7 @@
 			</p:input>
 			
 			<p:input port="stylesheet">
-				<p:document href="xslt/flatten-manifest.xsl"/>		
+			  <p:document href="http://xml.corbas.co.uk/xml/xproc-tools/xslt/flatten-manifest.xsl"/>		
 			</p:input>
 			
 		</p:xslt>		

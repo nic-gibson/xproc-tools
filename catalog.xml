@@ -2,10 +2,10 @@
 <!DOCTYPE catalog PUBLIC "-//OASIS//DTD XML Catalogs V1.1//EN" "http://www.oasis-open.org/committees/entity/release/1.1/catalog.dtd">
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
   
-    <rewriteURI uriStartString="http://www.corbas.co.uk/xproc-tools/" rewritePrefix="./"/>
+    <rewriteURI uriStartString="http://xml.corbas.co.uk/xml/xproc-tools/" rewritePrefix="./"/>
   
     <!-- Manifest schema file -->
-    <uri name="http://www.corbas.co.uk/xml/schemas/manifest.rng" uri="schemas/manifest.rng"/>
+    <uri name="http://xml.corbas.co.uk/xml/schemas/manifest.rng" uri="schemas/manifest.rng"/>
   
     
 </catalog>
