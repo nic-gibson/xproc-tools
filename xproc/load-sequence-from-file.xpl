@@ -26,65 +26,7 @@
 				Consulting Ltd by email at <a href="mailto:corbas@corbas.co.uk">corbas@corbas.co.uk</a>.</p>
 		</p:documentation>
 
-		<p:documentation xmlns="http://wwww.w3.org/1999/xhtml">
-			<table>
-				<caption>Change Log</caption>
-				<thead>
-					<tr>
-						<th>Revision No.</th>
-						<th>Date</th>
-						<th>Author</th>
-						<th>Change</th>
-					</tr>
-				</thead>
-				<tbody> 
-					<tr> 
-						<td>v0.1</td>
-						<td>2011-08-22</td>
-						<td>NG</td>
-						<td>Initial Version</td>
-					</tr>
-					<tr>
-						<td>v1.0</td>
-						<td>2013-01-14</td>
-						<td>NG</td>
-						<td><ul>
-							<li>Updated to current manifest schema</li>
-		
-						</ul></td>
-					</tr>
-					<tr>
-						<td>v1.1</td>
-						<td>2014-01-06</td>
-						<td>NG</td>
-						<td>Added support for import statements in manifest files.</td>
-					</tr> 
-					<tr>
-						<td>v1.2</td>
-						<td>2014-12-01</td>
-						<td>NG</td>
-						<td>
-							<ul>
-								<li>Support enabled attribute</li>
-								<li>Support grouping</li>
-								<li>Support metadata</li>
-							</ul>
-						</td>
-						
-					</tr>
-					
-					<tr>
-						<td>v1.3</td>
-						<td>2015-06-07</td>
-						<td>NG</td>
-						<td>
-							<ul>Correct xml:base errors in url resolution</ul>
-						</td>
-					</tr>
-				
-				</tbody> 
-			
-			</table>
+		<p:documentation  xmlns="http://wwww.w3.org/1999/xhtml">
 			
 			<p>Script to read an xml manifest file containing a list of files, load them and return a
 				sequence of the files in the order they were contained in the input file. The input file

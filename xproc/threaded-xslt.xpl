@@ -18,45 +18,6 @@
 		different license. If you are not aware of any such agreement and wish to agree other
 		license terms you must contact Corbas Consulting Ltd by email at corbas@corbas.co.uk. </p:documentation>
 
-	<p:documentation xmlns="http://wwww.w3.org/1999/xhtml">
-		<table>
-			<caption>Change Log</caption>
-			<thead>
-				<tr>
-					<th>Revision No.</th>
-					<th>Date</th>
-					<th>Author</th>
-					<th>Change</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>v0.1</td>
-					<td>2011-08-22</td>
-					<td>NG</td>
-					<td>Initial Version</td>
-				</tr>
-				<tr>
-					<td>v1.1</td>
-					<td>2014-12-01</td>
-					<td>NG</td>
-					<td>
-						<ul>
-							<li>Removed support for secondary ports</li>
-						</ul>
-					</td> </tr> <tr>
-					<td>v1.2</td>
-					<td>2014-12-02</td>
-					<td>NG</td>
-					<td>
-						<ul>
-							<li>Refactored to a step from a library</li>
-							<li>Added support for {http://www.corbas.co.uk/ns/transforms/data}:*
-								attributes to be mapped into xsl params.</li>
-							<li>Added secondary output port containing the intermediate results</li>
-						</ul>
-					</td> </tr> </tbody> </table>
-	</p:documentation>
 
 	<p:documentation>
 		<p xmlns="http:/wwww.w3.org/1999/xhtml">This step takes a sequence of transformation

@@ -3,8 +3,7 @@
 ## Introduction ##
 This is a small set of useful XProc tools that have developed over time to provide a framework for transformation of content from one XML format to another. These are primarily used when transformation makes most sense as a sequence of transformations. 
 
-All of these can be used via the ExPath package file or directly from the _src_ directory.  The import URIs for each step (when using ExPath) are given below.
-
+All of these can be used via the ExPath package file or directly from the _xproc_ directory.  Each of the tools is available from  **`"http://xml.corbas.co.uk/xml/xproc-tools/"`** but use of the included *catalog.xml* file is encouraged. Note that all URLs referenced in the tools (both XProc and XSLT) use absolute URLs and will load from **xml.corbas.co.uk** unless the catalog is used.
 
 ## Namespace ##
 
@@ -12,7 +11,7 @@ All of these steps are in the namespace **`"http://www.corbas.co.uk/ns/xproc/ste
 
 ## temp-dir.xpl ##
 
-**Import via  `http://www.corbas.co.uk/xproc-tools/temp-dir`**
+Import as  [http://xml.corbas.co.uk/xml/xproc-tools/temp-dir.xpl](http://xml.corbas.co.uk/xml/xproc-tools/temp-dir.xpl)
 
 ### ccproc:temp-dir
 
@@ -26,7 +25,7 @@ All of these steps are in the namespace **`"http://www.corbas.co.uk/ns/xproc/ste
 This step attempts to discover the system temporary directory path.  It has no inputs and a single output. The `result`  port provides a `c:result` element that contains the path to the temporary directory (as a URL) when found or an empty `c:result` if not.
 
 ```
-<p:import href="http://www.corbas.co.uk/xproc-tools/temp-dir">
+<p:import href="http://xml.corbas.co.uk/xml/xproc-tools/temp-dir.xpl">
 <ccproc:temp:dir name="get-temp-dir"/>
 <p:identity/>
 ```
@@ -43,7 +42,7 @@ See [pxf:tempfile](http://exproc.org/proposed/steps/fileutils.html#tempfile) for
 
 ## directory-list.xpl ##
 
-**Import via  `http://www.corbas.co.uk/xproc-tools/directory-list`**
+Import as  [http://xml.corbas.co.uk/xml/xproc-tools/directory-list.xpl](http://xml.corbas.co.uk/xml/xproc-tools/directory-list.xpl)
 
 ###  ccproc:directory-list ###
 
@@ -109,7 +108,7 @@ If the `resolve` option is set to _true_ then all files and directories will be 
 __Basic listing__
 ```xml
 <p:import 
-  href="http://www.corbas.co.uk/xproc-tools/directory-list">
+  href="http://xml.corbas.co.uk/xml/xproc-tools/directory-list.xpl">
 
 <ccproc:directory-list name="dl" path="." include-filter="\.x[mp]l"/>
 
@@ -163,7 +162,7 @@ __With path resolution__
 
 ## recursive-directory-list.xpl ##
 
-**TBD**
+Import as  [http://xml.corbas.co.uk/xml/xproc-tools/recursive-directory-list.xpl](http://xml.corbas.co.uk/xml/xproc-tools/recursive-directory-list.xpl)
 
 ## load-sequence-from-file.xpl ##
 
@@ -171,9 +170,11 @@ Many tasks require processing a sequence of documents in some way. We found ours
 
 As time and projects went by, it got a little more sophisticated.
 
-**Import via  `http://www.corbas.co.uk/xproc-tools/load-sequence-from-file`**
 
 ### ccproc:load-sequence-from-file ###
+
+Import as  [http://xml.corbas.co.uk/xml/xproc-tools/load-sequence-from-file.xpl](http://xml.corbas.co.uk/xml/xproc-tools/load-sequence-from-file.xpl)
+
 
 ```xml
 <p:declare-step type="ccproc:load-sequence-from-file">
@@ -182,9 +183,9 @@ As time and projects went by, it got a little more sophisticated.
 </p:declare-step>
 ```
 
-This step takes a single input – the manifest file and returns a sequence of XML documents loaded from the definitions in that file. The manifest is a file that validates against [manifest.rng](https://raw.githubusercontent.com/Corbas/xproc-tools/master/schemas/manifest.rng). 
+This step takes a single input – the manifest file and returns a sequence of XML documents loaded from the definitions in that file. The manifest is a file that validates against [manifest.rng]((http://xml.corbas.co.uk/xml/schemas/manifest.rng). 
 
-**The most recent version of the schema can always be accessed via [http://www.corbas.co.uk/xml/schemas/manifest.rng](http://www.corbas.co.uk/xml/schemas/manifest.rng)**
+**The most recent version of the schema can always be accessed via [http://xml.corbas.co.uk/xml/schemas/manifest.rng](http://xml.corbas.co.uk/xml/schemas/manifest.rng)**
 
 #### Using the manifest file ####
 
@@ -337,7 +338,8 @@ This module provides a solution to the problem of taking an input document and f
 
 ### ccproc:threaded-xslt ###
 
-**`Import via http://www.corbas.co.uk/xproc-tools/threaded-xslt`**
+Import as  [http://xml.corbas.co.uk/xml/xproc-tools/threaded-xslt.xpl](http://xml.corbas.co.uk/xml/xproc-tools/threaded-xslt.xpl)
+
 
 ```xml
 <p:declare-step type="ccproc:threaded-xslt">
@@ -357,7 +359,7 @@ The step applies the first stylesheet to the input document, the second styleshe
 The final output is presented on the `result` port. However, all intermediate output is available on the `imtermediates` port.
 
 ```xml
-<p:import href="http://www.corbas.co.uk/xproc-tools/threaded-xslt"/>
+<p:import href="http://xml.corbas.co.uk/xml/xproc-tools/threaded-xslt.xpl"/>
 <ccproc:threaded-xslt>
   <p:input port="source">
     <p:inline><test-doc>test content</test-doc></p:inline>
