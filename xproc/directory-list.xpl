@@ -82,6 +82,15 @@
 			the resolved uri for any file or directory</p>
 		</p:documentation>
 	</p:option>
+  
+<!--
+  <p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
+  
+  <cx:message>
+    <p:input port="source"><p:empty/></p:input>
+    <p:with-option name="message" select="concat('Generating listing for' , $path)"/>
+  </cx:message>  
+-->
 
 	<!-- get the listing fo the top directory -->
 	<p:directory-list name="listing">
