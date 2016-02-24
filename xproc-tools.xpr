@@ -418,9 +418,9 @@ set       toc,title</String>
     </meta>
     <projectTree name="xproc-tools.xpr">
         <folder path="schemas/"/>
-        <folder path="src/"/>
         <folder path="tests/"/>
-        <folder path="xproject/"/>
+        <folder path="xproc/"/>
+        <folder path="xslt/"/>
         <file name="catalog.xml"/>
     </projectTree>
 </project>

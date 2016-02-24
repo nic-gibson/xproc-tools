@@ -72,7 +72,7 @@
     </p:documentation>
   </p:option>
   
-  <p:import href="recursive-directory-list.xpl"/>
+  <p:import href="http://xml.corbas.co.uk/xml/xproc-tools/xproc/recursive-directory-list.xpl"/>
   
   <p:try name="try-listing">
     
