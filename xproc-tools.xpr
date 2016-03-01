@@ -6,6 +6,20 @@
             <serialized version="17.1" xml:space="preserve">
                 <serializableOrderedMap>
                     <entry>
+                        <String>catalog.verbose.level</String>
+                        <Integer>2</Integer>
+                    </entry>
+                    <entry>
+                        <String>catalogs.v5</String>
+                        <String-array>
+                            <String>${pdu}/catalog.xml</String>
+                        </String-array>
+                    </entry>
+                    <entry>
+                        <String>key.xml.catalog.option.pane</String>
+                        <Boolean>true</Boolean>
+                    </entry>
+                    <entry>
                         <String>scenarios</String>
                         <scenario-array>
                             <scenario>
