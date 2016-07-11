@@ -24,7 +24,7 @@
 			elements and executes them recursively applying the each stylesheet to the result of the
 			previous stylesheet. The final result is the result of threading the input document
 			through each of the stylesheets in turn.</p>
-		<p xmlns="http:/wwww.w3.org/1999/xhtml">Secondary documents are ignored.</p>
+		<p xmlns="http:/wwww.w3.org/1999/xhtml">Secondary documents are normally ignored.</p>
 	</p:documentation>
 
 	<p:input port="source" sequence="false" primary="true">
@@ -79,6 +79,18 @@
 				namesapce to parameters to be applied to the stylesheet. The attributes are not
 				removed from the stylesheet. The result of this a step is a <code>c:param-set</code>
 				element.</p>
+		  <p>Any attributes whose local name matches the regular expression passed as a parameter are suppresed.
+		  This allows us to handle the metadata values which modify the behaviour of this step:</p>
+		  <dl>
+		    <dt>ignore-primary</dt>
+		    <dd>If set to true, this attribute causes the script to ignore the primary output of the 
+		    stylesheet if and only if the process-secondary attribute is set to true.</dd>
+		    <dt>process-secondary</dt>
+		    <dd>Normally, secondary stylesheet outputs are ignored by this script. However, they
+		    can be included in processing by further stylesheets if this attribute is set to true</dd>
+		  </dl>
+		  <p>Settng either of these to true is done by using a metadata item in the manifest file. The
+		  value should be set to 'true' for functionality to be enabled.</p>
 		</p:documentation>
 
 		<p:input port="stylesheet" primary="true">
@@ -99,14 +111,129 @@
 			<p:input port="stylesheet">
 			  <p:document href="http://xml.corbas.co.uk/xml/xproc-tools/xslt/build-params.xsl"/>
 			</p:input>
-			<p:input port="parameters">
-				<p:empty/>
-			</p:input>
+			<p:with-param name="exclude-meta" select="'process-secondary|ignore-primary'"/>
 
 		</p:xslt>
 
 
 	</p:declare-step>
+  
+  <p:declare-step name="run-xslt" type="ccproc:run-xslt" exclude-inline-prefixes="#all">
+    
+    <p:documentation xmlns="http://www.w3.org/1999/xhtml">
+      <p>This steps executes an XSLT trsansform and then produces outputs that
+      can contain either the primary, secondary or both results depending on the
+      values (if set) of the ignore-primary and process-secondary metadata values
+      on the stylesheet.</p>
+  
+      <p>Only a single document is processed as input, multiple inputs are handled
+      by evaluating this multiple times.</p>
+
+    </p:documentation>
+    
+    <p:input port="stylesheet">
+      <p:documentation  xmlns="http://www.w3.org/1999/xhtml">
+        <p>The stylesheet to be executed.</p>
+      </p:documentation>
+    </p:input>
+    
+    <p:input port="source">
+      <p:documentation  xmlns="http://www.w3.org/1999/xhtml">
+        <p>The document to be processed by the stylesheet.</p>
+      </p:documentation>
+    </p:input>
+    
+    <p:input port="parameters" kind="parameter">
+      <p:documentation  xmlns="http://www.w3.org/1999/xhtml">
+        <p>Parameters to be passed to the xslt.</p>
+      </p:documentation>     
+    </p:input>
+    
+    <p:output port="result" primary="true" sequence="true">
+      <p:documentation  xmlns="http://www.w3.org/1999/xhtml">
+        <p>The result or results of the transformation.</p>
+      </p:documentation>     
+      <p:pipe port="result" step="build-results"/>
+    </p:output>
+    
+    <!-- check for the presence of metadata that modifies our
+        behaviour -->
+    <p:variable name="ignore-primary" 
+      select="if (lower-case(/xsl:stylesheet/@meta:ignore-primary) = 'true') then 'true' else 'false'">
+      <p:pipe port="stylesheet" step="run-xsl"/>
+    </p:variable>
+    
+    <p:variable name="process-secondary" 
+      select="if (lower-case(/xsl:stylesheet/@meta:process-secondary) = 'true') then 'true' else 'false'">
+      <p:pipe port="stylesheet" step="run-xslt"/>
+    </p:variable>
+    
+    <!-- run the stylesheet, merging parameters - params from the
+				XProc run override those in the manifest -->
+    <p:xslt name="run-single-xslt">
+      <p:input port="stylesheet">
+        <p:pipe port="matched" step="split-stylesheets"/>
+      </p:input>
+      <p:input port="source">
+        <p:pipe port="source" step="threaded-xslt-impl"/>
+      </p:input>
+      <p:input port="parameters">        
+        <p:pipe port="parameters" step="run-xslt"/>
+      </p:input>
+    </p:xslt>
+    
+    <!-- suppress normal processing of the primary as we handle it explicitly below -->
+    <p:sink/>
+    
+    <!-- work out what we do with results -->
+    <p:choose name="build-results">
+      
+      <p:when test="$ignore-primary = 'true' and $process-secondary = 'true'">
+        
+        <p:output port="result" sequence="true">
+          <p:pipe port="result" step="secondary-identity"/>
+        </p:output>
+        
+        <p:identity name="secondary-identity">
+          <p:input port="source">
+            <p:pipe port="secondary" step="run-single-xslt"/>
+          </p:input>
+        </p:identity>
+        
+      </p:when>
+      
+      <p:when test="$process-secondary = 'true'">
+        
+        <p:output port="result" sequence="true">
+          <p:pipe port="result" step="both-identity"/>
+        </p:output>
+        
+        <p:identity name="both-identity">
+          <p:input port="source">
+            <p:pipe port="result" step="run-single-xslt"/>
+            <p:pipe port="secondary" step="run-single-xslt"/>
+          </p:input>
+        </p:identity>
+        
+      </p:when>
+      
+      <p:otherwise>
+        
+        <p:output port="result" sequence="true">
+          <p:pipe port="result" step="primary-identity"/>
+        </p:output>
+        
+        <p:identity name="primary-identity">
+          <p:input port="source">
+            <p:pipe port="result" step="run-single-xslt"/>
+          </p:input>
+        </p:identity>
+        
+      </p:otherwise>   
+      
+    </p:choose>
+       
+  </p:declare-step>
 
 	<p:declare-step name="threaded-xslt-impl" type="ccproc:threaded-xslt-impl"
 		exclude-inline-prefixes="#all">
@@ -117,9 +244,9 @@
 				need to expose the workings.</p>
 		</p:documentation>
 
-		<p:input port="source" sequence="false" primary="true">
+		<p:input port="source" sequence="true" primary="true">
 			<p:documentation>
-				<p xmlns="http://www.w3.org/1999/xhtml">Document to be transformed.</p>
+				<p xmlns="http://www.w3.org/1999/xhtml">Document or documents to be transformed.</p>
 			</p:documentation>
 		</p:input>
 
@@ -194,8 +321,15 @@
 		</p:choose>
 		<p:sink/>
 
-		<!-- run the stylesheet, merging parameters - params from the
-				XProc run override those in the manifest -->
+		<!-- 
+		    run the stylesheet, merging parameters - params from the
+				XProc run override those in the manifest.
+				
+				On the first call to this step, we should just have a document
+				on the inputs. After that we expect to find a c:result document
+				which may c
+		
+		-->
 		<p:xslt name="run-single-xslt">
 			<p:input port="stylesheet">
 				<p:pipe port="matched" step="split-stylesheets"/>
@@ -221,7 +355,16 @@
 				<p:pipe port="result" step="count-remaining-transformations"/>
 			</p:xpath-context>
 
+      <!-- check for the presence of metadata that modifies our
+        behaviour -->
+      <p:variable name="ignore-primary" select="if (lower-case(/xsl:stylesheet/@meta:ignore-primary) = 'true') then 'true' else 'false'">
+        <p:pipe port="matched" step="split-stylesheets"/>
+      </p:variable>
 
+		  <p:variable name="process-secondary" select="if (lower-case(/xsl:stylesheet/@meta:process-secondary) = 'true') then 'true' else 'false'">
+		    <p:pipe port="matched" step="split-stylesheets"/>
+		  </p:variable>
+		  
 			<!-- If we have any transformations remaining recurse -->
 			<p:when test="number(c:result)>0">
 

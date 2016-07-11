@@ -3,12 +3,14 @@
   xmlns:meta="http://www.corbas.co.uk/ns/transforms/meta"
   xmlns:c="http://www.w3.org/ns/xproc-step"
   version="2.0">
+  <xsl:param name="exclude-meta" select="''"/>
   <xsl:template match="xsl:stylesheet">
     <c:param-set>
       <xsl:apply-templates select="@meta:*"/>
     </c:param-set>
   </xsl:template>
-  <xsl:template match="@meta:*">
+  <xsl:template match="@meta:*[if ($exclude-meta) then not(matches(., $exclude-meta)) else true()]">
     <c:param name="{local-name()}" value="{.}"/>
   </xsl:template>
+  <xsl:template match="@meta:*"/>
 </xsl:stylesheet>
