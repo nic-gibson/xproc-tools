@@ -25,9 +25,10 @@
 			previous stylesheet. The final result is the result of threading the input document
 			through each of the stylesheets in turn.</p>
 		<p xmlns="http:/wwww.w3.org/1999/xhtml">Secondary documents are normally ignored.</p>
+	  <p>TODO - document the new features.</p>
 	</p:documentation>
 
-	<p:input port="source" sequence="false" primary="true">
+	<p:input port="source" sequence="true" primary="true">
 		<p:documentation>
 			<p xmlns="http://www.w3.org/1999/xhtml">The primary input for the step is the document
 				to be transformed.</p>
@@ -202,6 +203,21 @@
         
       </p:when>
       
+      <!-- effectively an error condition -->
+      <p:when test="$ignore-primary = 'true' and $process-secondary = 'false'">
+        
+        <p:output port="result" sequence="true">
+          <p:empty/>
+        </p:output>
+        
+        <cx:message>
+          <p:with-option name="message" select="concat('Options give for ', document-uri(/), ' will never produce output')">
+              <p:pipe port="matched" step="split-stylesheets"/>
+          </p:with-option>
+        </cx:message>
+        
+      </p:when>
+      
       <p:when test="$process-secondary = 'true'">
         
         <p:output port="result" sequence="true">
@@ -216,6 +232,8 @@
         </p:identity>
         
       </p:when>
+      
+      
       
       <p:otherwise>
         
@@ -234,6 +252,8 @@
     </p:choose>
        
   </p:declare-step>
+
+  
 
 	<p:declare-step name="threaded-xslt-impl" type="ccproc:threaded-xslt-impl"
 		exclude-inline-prefixes="#all">
