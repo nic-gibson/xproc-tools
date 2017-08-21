@@ -395,3 +395,10 @@ Given a manifest —
 
 _ccproc:threaded-xslt_ will create XSLT parameters and pass them to the stylesheet engine. When _transform-01.xsl_ is applied to a document, the parameter `input-root` will be set to the value "/usr/local/share/xml/" . When _transform-02.xsl_ is applied, `input-root` will also be set (to "/usr/local/share/xml/") and `output-root` will be set to "/var/www/docs/".
 
+##### Implementation #####
+
+The metadata features are implemented by 
+
+#### Secondary outputs ####
+
+This processing model does not fit tidily with secondary XSLT outputs. However, they can be enabled. Two specific metadata values can be provided which will 

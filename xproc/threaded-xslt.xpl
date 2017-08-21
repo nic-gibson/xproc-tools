@@ -203,22 +203,7 @@
         
       </p:when>
       
-      <!-- effectively an error condition -->
-      <p:when test="$ignore-primary = 'true' and $process-secondary = 'false'">
-        
-        <p:output port="result" sequence="true">
-          <p:empty/>
-        </p:output>
-        
-        <cx:message>
-          <p:with-option name="message" select="concat('Options give for ', document-uri(/), ' will never produce output')">
-              <p:pipe port="matched" step="split-stylesheets"/>
-          </p:with-option>
-        </cx:message>
-        
-      </p:when>
-      
-      <p:when test="$process-secondary = 'true'">
+      <p:when test="$ignore-primary = 'false' and $process-secondary = 'true'">
         
         <p:output port="result" sequence="true">
           <p:pipe port="result" step="both-identity"/>
@@ -233,7 +218,20 @@
         
       </p:when>
       
-      
+    	<!-- effectively an error condition -->
+    	<p:when test="$ignore-primary = 'true' and $process-secondary = 'false'">
+    		
+    		<p:output port="result" sequence="true">
+    			<p:empty/>
+    		</p:output>
+    		
+    		<cx:message>
+    			<p:with-option name="message" select="concat('Options given for ', document-uri(/), ' will never produce output')">
+    				<p:pipe port="matched" step="split-stylesheets"/>
+    			</p:with-option>
+    		</cx:message>
+    		
+    	</p:when>
       
       <p:otherwise>
         
