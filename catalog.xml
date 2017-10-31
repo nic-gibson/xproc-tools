@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE catalog PUBLIC "-//OASIS//DTD XML Catalogs V1.1//EN" "http://www.oasis-open.org/committees/entity/release/1.1/catalog.dtd">
 <catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
-  
+    
+    <rewriteURI uriStartString="http://xml.corbas.co.uk/xml/xproc-tools/xproc/" rewritePrefix="./xproc/"/>
     <rewriteURI uriStartString="http://xml.corbas.co.uk/xml/xproc-tools/xslt/" rewritePrefix="./xslt/"/>
-    <rewriteURI uriStartString="http://xml.corbas.co.uk/xml/xproc-tools/" rewritePrefix="./xproc/"/>
+
+<!--    <uriSuffix uriSuffix="threaded-xslt.xpl" uri="./xproc/threaded-xslt.xpl"/>
+    <uriSuffix uriSuffix="load-sequence-from-file.xpl" uri="./xproc/load-sequence-from-file.xpl"/>
+
+    <uriSuffix uriSuffix="flatten-manifest.xsl" uri="./xslt/flatten-manifest.xsl"/>
+    <uriSuffix uriSuffix="build-params.xsl" uri="./xslt/build-params.xsl"/>
+    <uriSuffix uriSuffix="normalise-metadata.xsl" uri="./xslt/normalise-metadata.xsl"/>
+    <uriSuffix uriSuffix="process-imports.xsl" uri="./xslt/process-imports.xsl"/>
+    <uriSuffix uriSuffix="remove-disabled.xsl" uri="./xslt/remove-disabled.xsl"/>
+-->  
   
     <!-- Manifest schema file -->
-    <uri name="http://xml.corbas.co.uk/xml/schemas/manifest.rng" uri="schemas/manifest.rng"/>
-  
+    <uri name="http://xml.corbas.co.uk/xml/schemas/manifest.rng" uri="./schemas/manifest.rng"/>
+    
     
 </catalog>

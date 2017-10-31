@@ -2,6 +2,7 @@
 <p:library xmlns:p="http://www.w3.org/ns/xproc"
 	xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	xmlns:data="http://www.corbas.co.uk/ns/transforms/data"
+	xmlns:manifest="http://www.corbas.co.uk/ns/transforms/manifest"
 	xmlns:ccproc="http://www.corbas.co.uk/ns/xproc/steps"
 	xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:cx="http://xmlcalabash.com/ns/extensions" xmlns:c="http://www.w3.org/ns/xproc-step"
@@ -55,7 +56,6 @@
 		</p:output>
 
 		<p:import href="http://xmlcalabash.com/extension/steps/library-1.0.xpl"/>
-
 	
 		<p:declare-step name="process-metadata" type="ccproc:process-metadata">
 			<p:documentation xmlns="http://www.w3.org/1999/xhtml">
@@ -83,7 +83,7 @@
 			</p:output>
 			
 			<!-- find the metadata by filtering it -->
-			<p:filter name="find-metadata" select="//data:meta">
+			<p:filter name="find-metadata" select="//manifest:meta">
 				<p:input port="source">
 					<p:pipe port="manifest-item" step="process-metadata"/>
 				</p:input>
@@ -176,10 +176,10 @@
 					<!-- add the attribute -->
 					<p:add-attribute attribute-namespace="http://www.corbas.co.uk/ns/transforms/meta" attribute-prefix="meta"
 						name="insert-meta-item" match="/*">
-						<p:with-option name="attribute-name" select="/data:meta/@name">
+						<p:with-option name="attribute-name" select="/manifest:meta/@name">
 							<p:pipe port="matched" step="split-metadata"/>
 						</p:with-option>
-						<p:with-option name="attribute-value" select="/data:meta/@value">
+						<p:with-option name="attribute-value" select="/manifest:meta/@value">
 							<p:pipe port="matched" step="split-metadata"/>
 						</p:with-option>
 						<p:input port="source">
@@ -214,23 +214,23 @@
 
 			<p:output port="result" primary="true"/>
 
-			<p:iteration-source select="/data:manifest/*">
+			<p:iteration-source select="/manifest:manifest/*">
 				<p:pipe port="result" step="load-manifest"/>
 			</p:iteration-source>
 
 			<p:choose name="load-item">
 
-				<p:when test="/data:item">
+				<p:when test="/manifest:item">
 					
 					<p:output port="result">
 						<p:pipe port="result" step="load-doc"></p:pipe>
 					</p:output>
 
-					<p:variable name="href" select="p:resolve-uri(/data:item/@href, p:base-uri(/data:item))"/>
+					<p:variable name="href" select="/manifest:item/@href"/>
 
-					<!-- <cx:message>
-					<p:with-option name="message" select="concat('item: ', $href)"/>
-				</cx:message> -->
+					 <cx:message>
+						<p:with-option name="message" select="concat('item: ', $href)"/>
+					</cx:message> 
 
 					<p:load name="load-doc">
 						<p:with-option name="href" select="$href"/>
@@ -244,24 +244,31 @@
 						<p:pipe port="result" step="process-item"></p:pipe>
 					</p:output>
 
-					<p:variable name="stylesheet"
-						select="p:resolve-uri(/data:processed-item/@stylesheet, 
-						p:base-uri(/data:processed-item))"/>
-					<p:variable name="href"
-						select="p:resolve-uri(/data:processed-item/data:item/@href, 
-						p:base-uri(/data:processed-item/data:item))"/>
+					<p:variable name="stylesheet" select="/manifest:processed-item/@stylesheet"/>
 
-					<!--<cx:message>
-					<p:with-option name="message" select="concat('stylesheet: ', $stylesheet)"/>
-				</cx:message>-->
+					<p:variable name="href"
+						select="/manifest:processed-item/manifest:item/@href"/>
+					
+					
+					<cx:message name="wtf">
+						<p:with-option name="message" select="concat('root: ', name(/*))"/>
+					</cx:message>
+
+
+					<cx:message>
+						<p:with-option name="message" select="concat('stylesheet: ', $stylesheet)"/>
+					</cx:message>
+					
+					
+					
 
 					<p:load name="load-stylesheet">
 						<p:with-option name="href" select="$stylesheet"/>
 					</p:load>
 
-					<!--<cx:message>
-					<p:with-option name="message" select="concat('item: ', $href)"/>
-				</cx:message>-->
+					<cx:message>
+						<p:with-option name="message" select="concat('processed item: ', $href)"/>
+					</cx:message>
 
 					<p:load name="load-data">
 						<p:with-option name="href" select="$href"/>
@@ -278,6 +285,7 @@
 							<p:pipe port="result" step="load-data"/>
 						</p:input>
 					</p:xslt>
+					
 
 				</p:otherwise>
 			</p:choose>
@@ -317,7 +325,7 @@
 			</p:documentation>
 		</p:output>
 		
-		<!-- load all the imports except those that are not enabled -->
+		<!-- resolve uris and load all the imports except those that are not enabled -->
 		<p:xslt version="2.0" name="process-imports">
 			
 			<p:input port="source">
@@ -386,6 +394,7 @@
 			</p:input>
 			
 		</p:xslt>		
+		
 		
 		
 	</p:declare-step>		

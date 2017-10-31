@@ -1,7 +1,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns="http://www.corbas.co.uk/ns/transforms/data"
+    xmlns="http://www.corbas.co.uk/ns/transforms/manifest"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xpath-default-namespace="http://www.corbas.co.uk/ns/transforms/data"
+    xpath-default-namespace="http://www.corbas.co.uk/ns/transforms/manifest"
     version="2.0">
     
     <xsl:output indent="yes"/>
