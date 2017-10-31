@@ -243,6 +243,8 @@
 					<p:input port="parameters">
 						<p:pipe port="parameters" step="threaded-xslt-impl"/>
 					</p:input>
+					
+					<p:with-option name="verbose" select="$verbose"/>
 
 				</ccproc:threaded-xslt-impl>
 
